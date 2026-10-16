@@ -82,51 +82,6 @@
     map.forEach((_, section) => spy.observe(section));
   }
 
-  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    const cards = document.querySelectorAll('.card');
-    cards.forEach((card) => {
-      let frame = 0;
-      card.addEventListener('pointermove', (event) => {
-        if (frame) return;
-        frame = window.requestAnimationFrame(() => {
-          const rect = card.getBoundingClientRect();
-          card.style.setProperty('--mx', `${event.clientX - rect.left}px`);
-          card.style.setProperty('--my', `${event.clientY - rect.top}px`);
-          frame = 0;
-        });
-      });
-    });
-  }
-
-  const counters = document.querySelectorAll('[data-count]');
-  if (hasObserver && !reduceMotion && counters.length) {
-    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
-    const run = (el) => {
-      const target = Number(el.dataset.count);
-      if (!Number.isFinite(target)) return;
-      const duration = 900;
-      const start = performance.now();
-      const step = (now) => {
-        const progress = Math.min((now - start) / duration, 1);
-        el.textContent = String(Math.round(target * easeOut(progress)));
-        if (progress < 1) window.requestAnimationFrame(step);
-      };
-      window.requestAnimationFrame(step);
-    };
-    const counterObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          run(entry.target);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.6 });
-    counters.forEach((el) => {
-      el.textContent = '0';
-      counterObserver.observe(el);
-    });
-  }
-
   const form = document.getElementById('contact-form');
   if (form) {
     const status = form.querySelector('.form-status');
