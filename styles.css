@@ -212,16 +212,22 @@ figcaption{padding:.65rem 1.25rem;background:var(--fog);border-top:1px solid var
 .checks .ico{width:15px;height:15px;margin-top:.28rem;color:var(--accent)}
 .measure{font-size:.95rem;font-weight:500;padding:1rem 1.1rem;background:var(--accent-wash);border:1px solid var(--accent-soft);border-radius:14px;color:var(--accent-deep)}
 
-.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:2.25rem 2rem}
+.feats{display:grid;grid-template-columns:repeat(2,1fr);gap:2.25rem 3rem}
 .feats li{border-top:1px solid var(--line-strong);padding-top:1.25rem}
 .feats p{color:var(--graphite);font-size:.92rem}
+.feat summary{display:flex;align-items:baseline;gap:.9rem;position:relative;padding-right:1.75rem;cursor:pointer;list-style:none}
+.feat summary::-webkit-details-marker{display:none}
+.feat summary::after{content:"+";position:absolute;right:0;top:0;font-family:var(--mono);color:var(--ash)}
+.feat[open] summary::after{content:"\2212"}
+.feat summary h3{margin:0}
+.feat summary .idx{margin:0}
+.feat p{margin-top:.7rem}
 
-.dark{background:var(--ink);color:#fff;padding:clamp(4rem,8vw,7rem) 0}
-.dark h2{color:#fff;max-width:16ch}
-.kicker-light{color:rgba(255,255,255,.55)}
-.lead-light{color:rgba(255,255,255,.72);margin-top:1.25rem}
-.dark-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,6vw,5rem);align-items:center}
-.chat{display:grid;gap:.65rem;padding:1.5rem;background:#1d2026;border:1px solid rgba(255,255,255,.1);border-radius:28px;box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.proto{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,5vw,4rem);align-items:center;margin-top:clamp(3rem,6vw,4.5rem)}
+.proto-copy .kicker{margin-bottom:.8rem}
+.proto-copy p:not(.kicker){color:var(--graphite);max-width:48ch}
+.proto-title{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,3vw,2.3rem);letter-spacing:-.02em;line-height:1.1;margin-bottom:.9rem;text-wrap:balance}
+.chat{display:grid;gap:.65rem;padding:1.5rem;color:#fff;background:#1d2026;border:1px solid rgba(255,255,255,.1);border-radius:28px;box-shadow:0 30px 70px -34px rgba(23,25,28,.55)}
 .chat-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.35rem}
 .bubble{max-width:82%;padding:.7rem .95rem;border-radius:16px;font-size:.92rem;line-height:1.45}
 .bubble span{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;opacity:.6;margin-bottom:.2rem}
@@ -280,7 +286,7 @@ figcaption{padding:.65rem 1.25rem;background:var(--fog);border-top:1px solid var
 .process li:nth-child(n+3){border-top:1px solid var(--line)}
 .practices{grid-template-columns:repeat(3,1fr)}
 .feats{grid-template-columns:repeat(2,1fr)}
-.dark-grid,.contact{grid-template-columns:1fr}
+.proto,.contact{grid-template-columns:1fr}
 }
 
 @media (max-width:860px){
@@ -301,20 +307,26 @@ figcaption{padding:.65rem 1.25rem;background:var(--fog);border-top:1px solid var
 .wrap{width:min(1200px,100% - 2.5rem)}
 .bento{grid-template-columns:1fr}
 .bento .card:nth-child(3){grid-column:auto}
+.miniflow,.chain{display:none}
 .log li{grid-template-columns:1fr auto;gap:.35rem .75rem}
 .log li time{grid-column:1;grid-row:1}
 .log li .tag{grid-column:2;grid-row:1;justify-self:end}
 .log li .route{grid-column:1 / -1;grid-row:2}
 .log li .msg{grid-column:1 / -1;grid-row:3}
 .process{grid-template-columns:1fr}
-.process li{border-left:0;border-top:1px solid var(--line)}
+.process li{padding:1.25rem;border-left:0;border-top:1px solid var(--line)}
 .process li:first-child{border-top:0}
-.stage{grid-template-columns:1fr}
+.process .idx{margin-bottom:.6rem}
+.stage{display:flex;gap:.75rem;padding:.9rem;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.shot{flex:0 0 86%;scroll-snap-align:center}
 .shot-b{margin-top:0}
 .meta{grid-template-columns:1fr;gap:1.1rem}
-.practices{grid-template-columns:1fr}
+.practices{grid-template-columns:1fr;gap:1.25rem}
+.practices li{padding-top:.8rem}
 .cols{grid-template-columns:1fr}
-.feats{grid-template-columns:1fr}
+.feats{grid-template-columns:1fr;gap:0}
+.feats li{padding:.9rem 0}
+.feats li:last-child{border-bottom:1px solid var(--line-strong)}
 .projs{grid-template-columns:1fr}
 .field-row{grid-template-columns:1fr}
 .bubble{max-width:92%}

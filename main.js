@@ -119,6 +119,11 @@
     select(0, null);
   }
 
+  const feats = document.querySelectorAll('.feat');
+  if (feats.length && window.matchMedia('(max-width: 680px)').matches) {
+    feats.forEach((item) => item.removeAttribute('open'));
+  }
+
   const form = document.getElementById('contact-form');
   if (form) {
     const status = form.querySelector('.form-status');
