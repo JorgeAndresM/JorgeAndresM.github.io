@@ -82,6 +82,43 @@
     map.forEach((_, section) => spy.observe(section));
   }
 
+  const tablist = document.querySelector('[role="tablist"]');
+  if (tablist) {
+    const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+    const panels = tabs.map((tab) => document.getElementById(tab.getAttribute('aria-controls')));
+    const select = (index, mode) => {
+      tabs.forEach((tab, i) => {
+        const active = i === index;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+        panels[i].hidden = !active;
+      });
+      if (mode === 'key') tabs[index].focus();
+      if (mode) {
+        tabs[index].scrollIntoView({ block: 'nearest', inline: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i, 'click'));
+      tab.addEventListener('keydown', (event) => {
+        const last = tabs.length - 1;
+        const targets = {
+          ArrowDown: i === last ? 0 : i + 1,
+          ArrowRight: i === last ? 0 : i + 1,
+          ArrowUp: i === 0 ? last : i - 1,
+          ArrowLeft: i === 0 ? last : i - 1,
+          Home: 0,
+          End: last
+        };
+        if (event.key in targets) {
+          event.preventDefault();
+          select(targets[event.key], 'key');
+        }
+      });
+    });
+    select(0, null);
+  }
+
   const form = document.getElementById('contact-form');
   if (form) {
     const status = form.querySelector('.form-status');
