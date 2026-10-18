@@ -123,7 +123,7 @@
   if (form) {
     const status = form.querySelector('.form-status');
     const button = form.querySelector('button[type="submit"]');
-    const endpoint = form.dataset.endpoint || '';
+    const endpoint = form.getAttribute('action') || '';
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const nameField = form.elements.namedItem('nombre');
     const emailField = form.elements.namedItem('email');
@@ -157,13 +157,18 @@
 
       if (trapField && trapField.value) return;
 
-      if (!endpoint || endpoint.includes('REEMPLAZAR')) {
-        setStatus('El formulario aún no está conectado a un servicio de envío.', 'error');
+      if (!endpoint) {
+        setStatus('El formulario no está conectado a un servicio de envío.', 'error');
         return;
       }
 
       button.disabled = true;
       setStatus('Enviando...', '');
+
+      const payload = new FormData(form);
+      const needs = payload.getAll('necesidad');
+      payload.delete('necesidad');
+      if (needs.length) payload.set('necesidad', needs.join(', '));
 
       const controller = new AbortController();
       const timer = window.setTimeout(() => controller.abort(), 15000);
@@ -171,14 +176,27 @@
       try {
         const response = await fetch(endpoint, {
           method: 'POST',
-          body: new FormData(form),
+          body: payload,
           headers: { Accept: 'application/json' },
           signal: controller.signal
         });
+
+        if (response.status === 422) {
+          const detail = await response.json().catch(() => null);
+          const emailRejected = Boolean(detail && Array.isArray(detail.errors) && detail.errors.some((item) => item.field === 'email'));
+          if (emailRejected) {
+            mark(emailField, true);
+            emailField.focus();
+          }
+          setStatus(emailRejected ? 'El email ingresado no es válido.' : 'Revisa los datos ingresados.', 'error');
+          return;
+        }
+
         if (!response.ok) throw new Error(String(response.status));
+
         form.reset();
         setStatus('Mensaje enviado. Te contactaremos dentro de 1 a 2 días hábiles.', 'ok');
-      } catch (error) {
+      } catch {
         setStatus('No pudimos enviar el mensaje. Inténtalo nuevamente en unos minutos.', 'error');
       } finally {
         window.clearTimeout(timer);
